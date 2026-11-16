@@ -1,0 +1,41 @@
+# Local development stack. `docker compose up postgres` is enough when running the apps natively.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: launchmate
+      POSTGRES_USER: launchmate
+      POSTGRES_PASSWORD: launchmate
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U launchmate"]
+      interval: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    profiles: ["full"]
+    env_file: .env
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/launchmate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend
+    profiles: ["full"]
+    environment:
+      BACKEND_URL: http://backend:8080
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
