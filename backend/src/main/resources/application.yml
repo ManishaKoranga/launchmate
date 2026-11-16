@@ -25,6 +25,8 @@ spring:
 
 server:
   port: ${PORT:8080}
+  # Trust X-Forwarded-For only from internal proxies (the Next.js frontend), for per-IP rate limits.
+  forward-headers-strategy: native
   error:
     include-stacktrace: never
     include-message: never
@@ -59,3 +61,9 @@ launchmate:
 logging:
   level:
     com.launchmate: INFO
+
+launchmate.ai:
+  enabled: ${AI_ENABLED:true}
+  model: ${AI_MODEL:claude-opus-5-5}
+  timeout: ${AI_TIMEOUT:120s}
+  max-retries: 2

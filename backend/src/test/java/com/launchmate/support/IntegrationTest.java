@@ -1,7 +1,12 @@
 package com.launchmate.support;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import com.launchmate.ai.provider.LlmClient;
+import com.launchmate.onboarding.service.BusinessProfileExtractor;
+import com.launchmate.website.generation.WebsiteContentGenerator;
+import com.launchmate.website.service.WebsiteEditAssistant;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.DockerClientFactory;
@@ -18,6 +23,12 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest
 @AutoConfigureMockMvc
 public abstract class IntegrationTest {
+
+    // AI ports are mocked for every integration test: no network calls, deterministic behaviour.
+    @MockitoBean protected LlmClient llmClient;
+    @MockitoBean protected BusinessProfileExtractor profileExtractor;
+    @MockitoBean protected WebsiteContentGenerator websiteGenerator;
+    @MockitoBean protected WebsiteEditAssistant websiteEditAssistant;
 
     private static PostgreSQLContainer<?> container;
 

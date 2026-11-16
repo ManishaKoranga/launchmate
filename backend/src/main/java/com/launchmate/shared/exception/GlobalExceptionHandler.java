@@ -41,7 +41,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BusinessRuleException.class)
     ProblemDetail businessRule(BusinessRuleException ex) {
-        return problem(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        ProblemDetail pd = problem(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        if (!ex.getProblems().isEmpty()) {
+            pd.setProperty("problems", ex.getProblems());
+        }
+        return pd;
     }
 
     @ExceptionHandler({ForbiddenOperationException.class, AccessDeniedException.class})
