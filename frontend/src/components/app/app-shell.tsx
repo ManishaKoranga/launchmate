@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useState } from "react";
-import { LayoutDashboard, LogOut, Menu, Settings } from "lucide-react";
+import { Globe, Inbox, LayoutDashboard, LogOut, Menu, Package, Settings } from "lucide-react";
 import { Logo } from "@/components/marketing/logo";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -17,6 +17,9 @@ export type NavItem = { href: string; label: string; icon: React.ComponentType<{
 function navItems(base: string): NavItem[] {
   return [
     { href: base, label: "Overview", icon: LayoutDashboard, exact: true },
+    { href: `${base}/website`, label: "Website", icon: Globe },
+    { href: `${base}/products`, label: "Products & services", icon: Package },
+    { href: `${base}/inquiries`, label: "Inquiries", icon: Inbox },
     { href: `${base}/settings`, label: "Business profile", icon: Settings },
   ];
 }

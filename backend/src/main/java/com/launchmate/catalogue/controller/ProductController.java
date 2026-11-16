@@ -2,6 +2,7 @@ package com.launchmate.catalogue.controller;
 
 import com.launchmate.catalogue.domain.ProductInput;
 import com.launchmate.catalogue.dto.ProductResponse;
+import com.launchmate.catalogue.service.ProductImageService;
 import com.launchmate.catalogue.service.ProductImageUrls;
 import com.launchmate.catalogue.service.ProductService;
 import com.launchmate.shared.tenant.TenantContext;
@@ -35,8 +36,11 @@ public class ProductController {
     private final ProductService productService;
     private final ProductImageUrls imageUrls;
     private final TenantContext tenant;
+    private final ProductImageService imageService;
 
-    public ProductController(ProductService productService, ProductImageUrls imageUrls, TenantContext tenant) {
+    public ProductController(ProductService productService, ProductImageUrls imageUrls, TenantContext tenant,
+                             ProductImageService imageService) {
+        this.imageService = imageService;
         this.productService = productService;
         this.imageUrls = imageUrls;
         this.tenant = tenant;
@@ -75,5 +79,19 @@ public class ProductController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID businessId, @PathVariable UUID productId) {
         productService.delete(tenant.businessId(), tenant.userId(), productId);
+    }
+
+    @Operation(summary = "Upload or replace the product image (JPEG, PNG or WebP, max 5 MB)")
+    @PostMapping(value = "/{productId}/image", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ProductResponse uploadImage(@PathVariable UUID businessId, @PathVariable UUID productId,
+                                       @org.springframework.web.bind.annotation.RequestPart("file")
+                                       org.springframework.web.multipart.MultipartFile file) throws java.io.IOException {
+        return imageUrls.toResponse(imageService.upload(tenant.businessId(), tenant.userId(), productId, file.getBytes()));
+    }
+
+    @Operation(summary = "Remove the product image")
+    @DeleteMapping("/{productId}/image")
+    public ProductResponse removeImage(@PathVariable UUID businessId, @PathVariable UUID productId) {
+        return imageUrls.toResponse(imageService.remove(tenant.businessId(), tenant.userId(), productId));
     }
 }

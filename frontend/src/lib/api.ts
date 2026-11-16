@@ -10,6 +10,7 @@ export class ApiError extends Error {
     message: string,
     public readonly fieldErrors: Record<string, string> = {},
     public readonly notConfigured = false,
+    public readonly problems: string[] = [],
   ) {
     super(message);
     this.name = "ApiError";
@@ -75,12 +76,18 @@ export async function api<T>(path: string, options: RequestOptions = {}): Promis
   const data = text ? safeJson(text) : undefined;
 
   if (!response.ok) {
-    const problem = (data ?? {}) as { detail?: string; errors?: Record<string, string>; notConfigured?: boolean };
+    const problem = (data ?? {}) as {
+      detail?: string;
+      errors?: Record<string, string>;
+      notConfigured?: boolean;
+      problems?: string[];
+    };
     throw new ApiError(
       response.status,
       problem.detail ?? defaultMessage(response.status),
       problem.errors ?? {},
       problem.notConfigured ?? false,
+      problem.problems ?? [],
     );
   }
   return data as T;

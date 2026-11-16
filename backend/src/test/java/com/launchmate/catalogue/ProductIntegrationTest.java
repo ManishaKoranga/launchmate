@@ -44,6 +44,32 @@ class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    void imageUploadIsValidatedTenantScopedAndServedPublicly() throws Exception {
+        ApiClient owner = new ApiClient(mvc, json).registerNewUser();
+        ApiClient stranger = new ApiClient(mvc, json).registerNewUser();
+        String base = "/api/businesses/" + owner.createBusiness("Pics") + "/products";
+        String id = owner.readJson(owner.post(base, Map.of("kind", "PRODUCT", "name", "Cake"))).get("id").asText();
+
+        byte[] png = java.util.Base64.getDecoder().decode(
+                "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==");
+        var good = new org.springframework.mock.web.MockMultipartFile("file", "cake.png", "image/png", png);
+        var fake = new org.springframework.mock.web.MockMultipartFile("file", "evil.png", "image/png", "<script>".getBytes());
+
+        String imageUrl = owner.readJson(owner.multipart(base + "/" + id + "/image", good).andExpect(status().isOk()))
+                .get("imageUrl").asText();
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get(imageUrl))
+                .andExpect(status().isOk())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().contentType("image/png"));
+
+        owner.multipart(base + "/" + id + "/image", fake).andExpect(status().isUnprocessableEntity());
+        stranger.multipart(base + "/" + id + "/image", good).andExpect(status().isNotFound());
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/public/assets/../../etc/passwd"))
+                .andExpect(status().is4xxClientError()); // rejected by the firewall (400) or key validation (404)
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/public/assets/products/x.png"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void validationAndPlanLimit() throws Exception {
         ApiClient owner = new ApiClient(mvc, json).registerNewUser();
         String base = "/api/businesses/" + owner.createBusiness("Limits") + "/products";

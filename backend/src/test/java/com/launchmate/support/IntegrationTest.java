@@ -34,6 +34,8 @@ public abstract class IntegrationTest {
 
     @DynamicPropertySource
     static void datasource(DynamicPropertyRegistry registry) {
+        registry.add("launchmate.storage.local-path",
+                () -> System.getProperty("java.io.tmpdir") + "/launchmate-test-uploads");
         String url = System.getenv("LM_TEST_DB_URL");
         if (url != null && !url.isBlank()) {
             registry.add("spring.datasource.url", () -> url);

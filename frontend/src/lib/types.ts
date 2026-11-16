@@ -48,3 +48,50 @@ export type Business = BusinessProfile & {
 };
 
 export type BusinessSummary = Pick<Business, "id" | "slug" | "name" | "category" | "setupStage">;
+
+export type Product = {
+  id: string;
+  kind: "PRODUCT" | "SERVICE";
+  name: string;
+  description?: string | null;
+  price?: number | null;
+  priceNote?: string | null;
+  category?: string | null;
+  imageUrl?: string | null;
+  visible: boolean;
+  sortOrder: number;
+  updatedAt: string;
+};
+
+export type Page<T> = { items: T[]; page: number; size: number; totalItems: number; totalPages: number };
+
+export type LeadStatus = "NEW" | "CONTACTED" | "QUALIFIED" | "QUOTED" | "CONVERTED" | "LOST";
+
+export const LEAD_STATUSES: { value: LeadStatus; label: string }[] = [
+  { value: "NEW", label: "New" },
+  { value: "CONTACTED", label: "Contacted" },
+  { value: "QUALIFIED", label: "Qualified" },
+  { value: "QUOTED", label: "Quoted" },
+  { value: "CONVERTED", label: "Converted" },
+  { value: "LOST", label: "Lost" },
+];
+
+export type Lead = {
+  id: string;
+  customerName: string;
+  phone?: string | null;
+  email?: string | null;
+  message: string;
+  productId?: string | null;
+  productName?: string | null;
+  preferredDate?: string | null;
+  budget?: string | null;
+  source: "WEBSITE" | "MANUAL";
+  status: LeadStatus;
+  notes?: string | null;
+  quoteDraft?: string | null;
+  statusChangedAt: string;
+  createdAt: string;
+};
+
+export type LeadSummary = { total: number; lastSevenDays: number; byStatus: Record<LeadStatus, number> };

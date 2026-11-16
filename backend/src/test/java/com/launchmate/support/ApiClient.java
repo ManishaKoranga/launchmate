@@ -64,6 +64,10 @@ public final class ApiClient {
         return mvc.perform(withSession(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete(url)).with(csrf()));
     }
 
+    public ResultActions multipart(String url, org.springframework.mock.web.MockMultipartFile file) throws Exception {
+        return mvc.perform(withSession(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart(url).file(file)).with(csrf()));
+    }
+
     public JsonNode readJson(ResultActions result) throws Exception {
         return json.readTree(result.andReturn().getResponse().getContentAsString());
     }

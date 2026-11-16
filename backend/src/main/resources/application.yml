@@ -67,3 +67,6 @@ launchmate.ai:
   model: ${AI_MODEL:claude-opus-5-5}
   timeout: ${AI_TIMEOUT:120s}
   max-retries: 2
+
+launchmate.storage:
+  local-path: ${STORAGE_LOCAL_PATH:./uploads}
