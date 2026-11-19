@@ -18,6 +18,4 @@
 	reverse_proxy frontend:3000
 }
 
-www.{$DOMAIN} {
-	redir https://{$DOMAIN}{uri} permanent
-}
+# Add a www redirect here once a real domain (not an IP) is configured.

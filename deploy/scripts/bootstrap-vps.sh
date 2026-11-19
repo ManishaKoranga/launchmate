@@ -7,7 +7,7 @@
 set -euo pipefail
 
 PUBKEY="${1:?Pass your SSH public key (contents of ~/.ssh/id_ed25519.pub) as the first argument}"
-DEPLOY_USER=deploy
+DEPLOY_USER="${DEPLOY_USER:-deploy}"
 
 if [ "$(id -u)" -ne 0 ]; then echo "Run as root" >&2; exit 1; fi
 . /etc/os-release

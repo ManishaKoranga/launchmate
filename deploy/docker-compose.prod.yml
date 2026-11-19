@@ -29,6 +29,9 @@ services:
         BACKEND_URL: http://backend:8080
         NEXT_PUBLIC_APP_URL: https://${DOMAIN}
     restart: unless-stopped
+    # Read at runtime by server-rendered pages (e.g. /s/{slug}) to reach the backend container.
+    environment:
+      BACKEND_URL: http://backend:8080
     depends_on:
       backend:
         condition: service_healthy
