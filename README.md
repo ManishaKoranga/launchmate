@@ -1,5 +1,9 @@
 # LaunchMate
 
+**Live demo:** https://sitelaunch.duckdns.org · **Sample website:** https://sitelaunch.duckdns.org/s/homebakers-nainital
+
+Hackathon submission details: [docs/HACKATHON_SUBMISSION.md](docs/HACKATHON_SUBMISSION.md) · Demo script: [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md)
+
 AI-powered business launch platform for non-technical entrepreneurs. Describe your business in
 English, Hindi or Hinglish; LaunchMate builds a website, catalogue and inquiry inbox, and gives you an
 AI assistant that operates your business through safe, typed tools.
