@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useState } from "react";
-import { Globe, Inbox, LayoutDashboard, LogOut, Menu, Package, Settings } from "lucide-react";
+import { Globe, Inbox, LayoutDashboard, LogOut, Menu, Package, Settings, Store } from "lucide-react";
 import { Logo } from "@/components/marketing/logo";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -16,6 +16,7 @@ export type NavItem = { href: string; label: string; icon: React.ComponentType<{
 /** Navigation entries; each module adds its entry here when its screen exists (no dead links). */
 function navItems(base: string): NavItem[] {
   return [
+    { href: "/app", label: "My businesses", icon: Store, exact: true },
     { href: base, label: "Overview", icon: LayoutDashboard, exact: true },
     { href: `${base}/website`, label: "Website", icon: Globe },
     { href: `${base}/products`, label: "Products & services", icon: Package },

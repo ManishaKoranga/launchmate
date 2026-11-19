@@ -19,8 +19,8 @@ export function BusinessPicker() {
   useEffect(() => {
     api<BusinessSummary[]>("/api/businesses")
       .then((list) => {
+        // Always show the list when there is at least one business, so the owner can add another.
         if (list.length === 0) router.replace("/app/onboarding");
-        else if (list.length === 1) router.replace(`/app/b/${list[0].id}`);
         else setBusinesses(list);
       })
       .catch((e) => setError(errorMessage(e)));
