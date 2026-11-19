@@ -218,7 +218,7 @@ function ChatStep({
             className="max-h-40 min-h-11 resize-none"
             aria-label="Message"
           />
-          <VoiceNoteButton disabled={sending} onTranscript={(t) => setText((cur) => (cur.trim() ? `${cur.trim()} ${t}` : t))} />
+          <VoiceNoteButton disabled={sending} onTranscript={(t) => void send(t)} />
           <Button type="submit" size="icon-lg" disabled={sending || !text.trim()} aria-label="Send">
             {sending ? <Loader2 className="animate-spin" /> : <ArrowUp />}
           </Button>

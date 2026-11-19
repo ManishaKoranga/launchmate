@@ -91,7 +91,6 @@ export function VoiceNoteButton({ onTranscript, disabled }: { onTranscript: (tex
     try {
       const t = await api<{ text: string; language?: string }>("/api/voice/transcriptions", { method: "POST", body: fd });
       onTranscript(t.text);
-      toast.info("Check the text, fix anything we misheard, then send.");
     } catch (e) {
       toast.error(errorMessage(e));
     } finally {
