@@ -38,10 +38,15 @@ Legend: `[x]` done and verified · `[~]` partially done / adapter only · `[ ]` 
 - [ ] GoDaddy adapter (requires credentials)
 
 ## Phase 5 — Voice & growth
-- [ ] Voice notes (MediaRecorder → STT port)
+- [x] Voice notes: MediaRecorder → upload → local whisper.cpp (SpeechToText port) → editable transcript; audio not retained — verified with a real Hinglish recording
 - [ ] Page-view tracking + analytics (dashboard currently shows real lead/product data only)
 - [ ] Growth recommendations
 - [ ] LiveKit (optional)
+
+## Deployment (GoDaddy VPS)
+- [x] Production Docker stack: Caddy (auto HTTPS) + Next.js standalone + Spring Boot with whisper.cpp + PostgreSQL
+- [x] VPS bootstrap (deploy user, Docker, firewall, SSH hardening, swap, auto-updates), deploy, DNS and backup scripts
+- [ ] Deployed to the real VPS — needs VPS IP + SSH access, domain and Anthropic API key
 
 ## Phase 6 — Quality & demo
 - [~] End-to-end demo run (Deoband bakery) — steps 1–10 verified in a real browser with Playwright; step 11 (AI quotation) pending assistant

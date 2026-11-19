@@ -1,0 +1,78 @@
+# Production stack for a single VPS (e.g. GoDaddy VPS, Ubuntu 22.04/24.04).
+#   Internet → Caddy (HTTPS, :80/:443) → frontend (Next.js) → backend (Spring Boot) → PostgreSQL
+# Only Caddy publishes ports. Usage (from this directory):
+#   docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
+name: launchmate
+
+services:
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+
+  frontend:
+    build:
+      context: ../frontend
+      args:
+        BACKEND_URL: http://backend:8080
+        NEXT_PUBLIC_APP_URL: https://${DOMAIN}
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  backend:
+    build:
+      context: ../backend
+    restart: unless-stopped
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/launchmate
+      DB_USERNAME: launchmate
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      PUBLIC_BASE_URL: https://${DOMAIN}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      API_DOCS_ENABLED: "false"
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      AI_MODEL: ${AI_MODEL:-claude-opus-5-5}
+      VOICE_ENABLED: ${VOICE_ENABLED:-true}
+      WHISPER_THREADS: ${WHISPER_THREADS:-4}
+      WHISPER_CONCURRENCY: ${WHISPER_CONCURRENCY:-1}
+    volumes:
+      - uploads:/data/uploads
+      - whisper_models:/models
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: launchmate
+      POSTGRES_USER: launchmate
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U launchmate -d launchmate"]
+      interval: 5s
+      retries: 20
+
+volumes:
+  pgdata:
+  uploads:
+  whisper_models:
+  caddy_data:
+  caddy_config:

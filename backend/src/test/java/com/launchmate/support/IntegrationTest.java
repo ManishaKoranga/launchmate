@@ -5,6 +5,7 @@ import com.launchmate.ai.provider.LlmClient;
 import com.launchmate.onboarding.service.BusinessProfileExtractor;
 import com.launchmate.website.generation.WebsiteContentGenerator;
 import com.launchmate.website.service.WebsiteEditAssistant;
+import com.launchmate.voice.service.SpeechToText;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -29,6 +30,7 @@ public abstract class IntegrationTest {
     @MockitoBean protected BusinessProfileExtractor profileExtractor;
     @MockitoBean protected WebsiteContentGenerator websiteGenerator;
     @MockitoBean protected WebsiteEditAssistant websiteEditAssistant;
+    @MockitoBean protected SpeechToText speechToText;
 
     private static PostgreSQLContainer<?> container;
 

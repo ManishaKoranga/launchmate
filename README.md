@@ -29,6 +29,17 @@ The frontend proxies `/api/*` to the backend (`BACKEND_URL`, default `http://loc
 Claude credentials: set `ANTHROPIC_API_KEY`, or log in once with `ant auth login` — the official
 Java SDK picks up either.
 
+## Voice notes (local speech-to-text)
+
+Voice notes are transcribed on the server with [whisper.cpp](https://github.com/ggml-org/whisper.cpp).
+Locally: `brew install whisper-cpp ffmpeg` and download the model to
+`~/.cache/launchmate/whisper/ggml-small.bin` (or set `WHISPER_MODEL_PATH`). Without them, the mic button
+is hidden and text input works as usual. The Docker image builds whisper.cpp and fetches the model itself.
+
+## Deploy
+
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) (GoDaddy VPS + domain).
+
 ## Tests
 
 Integration tests run against real PostgreSQL. With Docker running they use Testcontainers;

@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { BusinessProfileForm } from "@/components/app/business-profile-form";
 import { FullPageError, FullPageSpinner } from "@/components/app/states";
+import { VoiceNoteButton } from "@/components/app/voice-note-button";
 import { api, ApiError, errorMessage } from "@/lib/api";
 import { CATEGORY_LABELS, type Business, type BusinessProfile } from "@/lib/types";
 import type { GenerationJob } from "@/lib/site-types";
@@ -163,7 +164,7 @@ function ChatStep({
               <Sparkles className="mx-auto size-6 text-primary" />
               <h1 className="mt-3 text-xl font-semibold">Tell us about your business</h1>
               <p className="mt-2 text-sm text-muted-foreground">
-                Write the way you speak — English, Hindi or Hinglish. What do you sell, where are you, and who are your customers?
+                Write or speak the way you talk — English, Hindi or Hinglish. What do you sell, where are you, and who are your customers?
               </p>
               <div className="mt-6 grid gap-2 text-left">
                 {EXAMPLES.map((ex) => (
@@ -217,6 +218,7 @@ function ChatStep({
             className="max-h-40 min-h-11 resize-none"
             aria-label="Message"
           />
+          <VoiceNoteButton disabled={sending} onTranscript={(t) => setText((cur) => (cur.trim() ? `${cur.trim()} ${t}` : t))} />
           <Button type="submit" size="icon-lg" disabled={sending || !text.trim()} aria-label="Send">
             {sending ? <Loader2 className="animate-spin" /> : <ArrowUp />}
           </Button>
